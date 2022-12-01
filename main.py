@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from tortoise.contrib.fastapi import register_tortoise
+
 from users.api import users_router
 from admins.api import admins_router
 

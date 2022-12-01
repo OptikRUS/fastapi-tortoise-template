@@ -65,3 +65,11 @@ class CORSSettings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+
+
+class SuperUsersSettings(BaseSettings):
+    superusers: list[str] = Field(["django"], env="SUPER_USERS")
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"

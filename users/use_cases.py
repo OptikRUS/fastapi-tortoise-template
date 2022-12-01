@@ -1,8 +1,12 @@
+from .schemas import UserRegister
 from .models import Users, UserResponse, UserUpdate
 from .security.schemas import Token
 from .security import authenticate_user, sign_jwt, get_hasher
 from .exceptions import (UserWrongPasswordError, UserAlreadyRegisteredError, UserEmailTakenError,
                          UserPhoneTakenError, UserNotFoundError)
+from .maintenance import su_registration
+
+from config import super_users_config
 
 
 class UserAuth:
@@ -26,11 +30,13 @@ class UserRegistration:
     def __init__(self) -> None:
         self.hasher = get_hasher()
 
-    async def __call__(self, user: UserResponse) -> UserResponse:
+    @su_registration(super_users_config.get("superusers"))
+    async def __call__(self, user: UserRegister) -> UserResponse:
 
         username = await Users.get_or_none(username=user.username)
         if username:
             raise UserAlreadyRegisteredError
+
         user_email = await Users.get_or_none(email=user.email)
         if user_email:
             raise UserEmailTakenError
