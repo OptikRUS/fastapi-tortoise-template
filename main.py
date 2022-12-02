@@ -1,12 +1,15 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from tortoise.contrib.fastapi import register_tortoise
 
 from users.api import users_router
 from admins.api import admins_router
 
-from config import app_config, database_config, site_config
+from config import app_config, database_config, site_config, cors_config
 
 app = FastAPI(**app_config)
+app.add_middleware(CORSMiddleware, **cors_config)
+
 
 register_tortoise(
     app,
