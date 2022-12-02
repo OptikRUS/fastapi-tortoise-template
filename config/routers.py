@@ -2,8 +2,8 @@ from fastapi import APIRouter
 
 
 def get_routers() -> list[APIRouter]:
-    from users.api import users_router
-    from admins.api import admins_router
+    from users import users_router
+    from admins import admins_router
 
     routers: list[APIRouter] = list()
 
