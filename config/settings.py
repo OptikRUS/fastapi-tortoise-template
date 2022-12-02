@@ -4,7 +4,9 @@ from pydantic import BaseSettings, Field
 class SiteSettings(BaseSettings):
     host: str = Field("127.0.0.1", env="SITE_HOST")
     port: int = Field(8000, env="SITE_PORT")
+    # debug: bool = Field(True, env="SITE_DEBUG")
     # reload: bool = Field(True, env="SITE_RELOAD")
+    log_level: str = Field("info", env="SITE_LOG_LEVEL")
 
     class Config:
         env_file = ".env"
@@ -32,7 +34,7 @@ class DataBaseSettings(BaseSettings):
     # database: str = Field("postgres", env="DATABASE_NAME")
 
     # sqlite
-    database_url: str = Field("sqlite://{db_name}.db")
+    db_url: str = Field("sqlite://{db_name}.db")
     db_name: str = Field("db_app", env="DATABASE_NAME")
 
     class Config:
