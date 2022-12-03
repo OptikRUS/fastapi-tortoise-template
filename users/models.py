@@ -28,6 +28,9 @@ class Users(models.Model):
             return f"{self.last_name} {self.first_name} {self.patronymic_name}"
         return self.username
 
+    def __str__(self):
+        return self.username
+
     class PydanticMeta:
         computed = ["full_name_or_username"]
         exclude = ["password"]
