@@ -2,8 +2,9 @@ from .schemas import UserRegister
 from .models import Users, UserResponse, UserUpdate
 from .security.schemas import Token
 from .security import authenticate_user, sign_jwt, get_hasher
-from .exceptions import (UserWrongPasswordError, UserAlreadyRegisteredError, UserEmailTakenError,
-                         UserPhoneTakenError, UserNotFoundError)
+from .exceptions import (
+    UserWrongPasswordError, UserAlreadyRegisteredError, UserEmailTakenError, UserPhoneTakenError, UserNotFoundError
+)
 from .maintenance import su_registration
 
 from config import super_users_config

@@ -1,8 +1,10 @@
 import os
 from typing import Any
 
-from config.settings import (SiteSettings, ApplicationSettings, DataBaseSettings, AuthSettings,
-                             CORSSettings, SuperUsersSettings, TortoiseSettings)
+from config.settings import (
+    SiteSettings, ApplicationSettings, DataBaseSettings, AuthSettings,
+    CORSSettings, SuperUsersSettings, TortoiseSettings
+)
 
 base_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
