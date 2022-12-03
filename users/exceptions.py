@@ -10,7 +10,7 @@ class UserWrongPasswordError(BaseUserException):
 
 class UserAlreadyRegisteredError(BaseUserException):
     message: str = "Пользователь с таким ником уже зарегистрирован."
-    status: int = status.HTTP_400_BAD_REQUEST
+    status: int = status.HTTP_409_CONFLICT
 
 
 class UserEmailTakenError(UserAlreadyRegisteredError):
@@ -27,7 +27,7 @@ class UserNotAuthError(UserWrongPasswordError):
 
 class UserNotActiveError(BaseUserException):
     message: str = "Пользователь неактивен."
-    status: int = status.HTTP_400_BAD_REQUEST
+    status: int = status.HTTP_403_FORBIDDEN
 
 
 class UserTokenTimeoutError(BaseUserException):
