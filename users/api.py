@@ -12,7 +12,7 @@ from tortoise.contrib.fastapi import HTTPNotFoundError
 users_router = APIRouter(prefix="/users", tags=["users"])
 
 
-@users_router.post("/", status_code=201, response_model=UserResponse)
+@users_router.post("/register", status_code=201, response_model=UserResponse)
 async def register_user(user: UserRegister):
     """
     Регистрация пользователя
