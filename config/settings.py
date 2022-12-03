@@ -26,16 +26,37 @@ class ApplicationSettings(BaseSettings):
 class DataBaseSettings(BaseSettings):
 
     # postgres
-    # database_url: str = Field("postgres://{user}:{password}@{host}:{port}/{database}")
     # port: str = Field("5432", env="DATABASE_PORT")
     # user: str = Field("postgres", env="DATABASE_USER")
     # host: str = Field("db_app", env="DATABASE_HOST")
     # password: str = Field("postgres", env="DATABASE_PASSWORD")
-    # database: str = Field("postgres", env="DATABASE_NAME")
+    # db_name: str = Field("postgres", env="DATABASE_NAME")
+    # database_url: str = Field("postgres://{user}:{password}@{host}:{port}/{database}")
 
     # sqlite
-    db_url: str = Field("sqlite://{db_name}.db")
     db_name: str = Field("db_app", env="DATABASE_NAME")
+    database_url: str = Field("sqlite://{db_name}.db")
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+
+
+class DataBaseUrl(BaseSettings):
+    url: str = Field(DataBaseSettings().database_url.format(**DataBaseSettings().dict()))
+
+
+class DataBaseModels(BaseSettings):
+    models: list = Field([
+        "users.models",
+    ])
+
+
+class TortoiseSettings(BaseSettings):
+    db_url: str = Field(DataBaseUrl().url)
+    modules: dict = Field(DataBaseModels())
+    generate_schemas: bool = Field(True, env="TORTOISE_GENERATE_SCHEMAS")
+    add_exception_handlers: bool = Field(True, env="DATABASE_EXCEPTION_HANDLERS")
 
     class Config:
         env_file = ".env"

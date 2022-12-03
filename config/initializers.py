@@ -23,12 +23,6 @@ def init_routers(application: FastAPI) -> None:
 
 def init_database(application: FastAPI) -> None:
     from tortoise.contrib.fastapi import register_tortoise
-    from config import database_config
+    from config import tortoise_config
 
-    register_tortoise(
-        application,
-        db_url=database_config.get('db_url').format(**database_config),
-        modules={"models": ["users.models"]},
-        generate_schemas=True,
-        add_exception_handlers=True,
-    )
+    register_tortoise(application, **tortoise_config)
