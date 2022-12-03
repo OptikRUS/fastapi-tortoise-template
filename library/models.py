@@ -35,6 +35,7 @@ class Genres(models.Model):
     """
     Модель жанра книги
     """
+    id = fields.IntField(pk=True)
     name = fields.CharField(max_length=200)
 
     def __str__(self):
