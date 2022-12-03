@@ -1,6 +1,6 @@
 from tortoise import fields, models
 
-from .exceptions import AuthorFullNameError
+from .exceptions import LibraryFullNameError
 
 
 class Authors(models.Model):
@@ -25,7 +25,7 @@ class Authors(models.Model):
     def __str__(self):
         if self.full_name:
             return self.full_name
-        raise AuthorFullNameError
+        raise LibraryFullNameError
 
     class PydanticMeta:
         computed = ["full_name"]

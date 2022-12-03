@@ -3,7 +3,7 @@ from typing import Any, Optional
 from fastapi import HTTPException
 
 
-class BaseAuthorException(HTTPException):
+class BaseLibraryException(HTTPException):
     """
     Базовая HTTP-ошибка автора
     """

@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 
-from library import schemas
 from users.security import get_current_admin, get_current_user
 from users.models import Users
+from library import schemas
+from library.use_cases import GenreCreationCase, GetAllGenres
 
 
 library_router = APIRouter(prefix="/library", tags=["library"])
@@ -13,8 +14,8 @@ async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: Users
     """
     Добавление жанра книги админом
     """
-
-    return None
+    genre_creation: GenreCreationCase = GenreCreationCase()
+    return await genre_creation(genre)
 
 
 @library_router.get("/all_genres", status_code=200, response_model=list[schemas.GenreResponse])
@@ -22,8 +23,8 @@ async def get_all_genres(current_user: Users = Depends(get_current_user)):
     """
     Список всех жанров
     """
-
-    return None
+    all_users = GetAllGenres()
+    return await all_users()
 
 
 @library_router.post("/add_author", status_code=201, response_model=schemas.AuthorResponse)
