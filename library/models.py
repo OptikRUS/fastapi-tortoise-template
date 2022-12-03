@@ -55,6 +55,8 @@ class Books(models.Model):
         'models.Genres', related_name='books', on_delete=fields.SET_NULL, through='books_genres'
     )
     user = fields.ForeignKeyField('models.Users', related_name='books')
+    created_at = fields.DatetimeField(auto_now_add=True)
+    updated_at = fields.DatetimeField(auto_now=True)
 
     def __str__(self):
         return self.title
