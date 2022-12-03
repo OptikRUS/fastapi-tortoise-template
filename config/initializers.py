@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from tortoise.contrib.fastapi import register_tortoise
 
 
 def init_app() -> FastAPI:
@@ -11,6 +9,7 @@ def init_app() -> FastAPI:
 
 
 def init_cors(application: FastAPI) -> None:
+    from fastapi.middleware.cors import CORSMiddleware
     from config import cors_config
     application.add_middleware(CORSMiddleware, **cors_config)
 
@@ -23,6 +22,7 @@ def init_routers(application: FastAPI) -> None:
 
 
 def init_database(application: FastAPI) -> None:
+    from tortoise.contrib.fastapi import register_tortoise
     from config import database_config
 
     register_tortoise(
