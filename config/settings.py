@@ -49,6 +49,7 @@ class DataBaseUrl(BaseSettings):
 class DataBaseModels(BaseSettings):
     models: list = Field([
         "users.models",
+        "library.models"
     ])
 
 
