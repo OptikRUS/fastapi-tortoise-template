@@ -14,6 +14,7 @@ async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: Users
     """
     Добавление жанра книги админом
     """
+
     genre_creation: GenreCreationCase = GenreCreationCase()
     return await genre_creation(genre)
 
@@ -23,6 +24,7 @@ async def get_all_genres(current_user: Users = Depends(get_current_user)):
     """
     Список всех жанров
     """
+
     all_users = GetGenresCase()
     return await all_users()
 
@@ -42,6 +44,7 @@ async def get_all_authors(current_user: Users = Depends(get_current_user)):
     """
     Список всех авторов
     """
+
     all_authors = GetAuthorsCase()
     return await all_authors()
 

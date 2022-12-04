@@ -41,7 +41,7 @@ class Genre(models.Model):
     Модель жанра книги
     """
     id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=200)
+    name = fields.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
@@ -55,12 +55,12 @@ class Book(models.Model):
     Модель книги
     """
     id = fields.IntField(pk=True)
-    title = fields.CharField(max_length=200)
-    author: fields.ManyToManyRelation[Author] = fields.ManyToManyField(
+    title = fields.CharField(max_length=200, unique=True)
+    authors: fields.ManyToManyRelation[Author] = fields.ManyToManyField(
         'models.Author', related_name='books', on_delete=fields.SET_NULL, through='books_authors'
     )
     summary = fields.TextField()
-    genre: fields.ManyToManyRelation[Genre] = fields.ManyToManyField(
+    genres: fields.ManyToManyRelation[Genre] = fields.ManyToManyField(
         'models.Genre', related_name='books', on_delete=fields.SET_NULL, through='books_genres'
     )
     created_at = fields.DatetimeField(auto_now_add=True)

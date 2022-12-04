@@ -1,8 +1,7 @@
 from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookResponse
 from .models import Genre, Author, Book
 from .exceptions import (
-    GenreAlreadyExistError, GenresNotFoundError, AuthorAlreadyExistError, AuthorsNotFoundError, GenreNotFoundError,
-    AuthorNotFoundError, BookAlreadyExistError
+    GenreAlreadyExistError, GenresNotFoundError, AuthorAlreadyExistError, AuthorsNotFoundError, BookAlreadyExistError
 )
 
 
@@ -68,24 +67,24 @@ class BookCreationCase:
     """
 
     async def __call__(self, book: CreateBook) -> BookResponse:
-        genre = await Genre.get_or_none(id=book.genre_id)
-        if not genre:
-            raise GenreNotFoundError
 
-        author = await Author.get_or_none(id=book.author_id)
-        if not author:
-            raise AuthorNotFoundError
+        genres = await Genre.filter(id__in=book.genres_id)
+        if not genres:
+            raise GenresNotFoundError
+
+        authors = await Author.filter(id__in=book.authors_id)
+        if not authors:
+            raise AuthorsNotFoundError
 
         book_exist = await Book.exists(title__iexact=book.title)
-
         if book_exist:
             raise BookAlreadyExistError
 
         new_book = await Book.create(**book.dict())
-        await new_book.author.add(author)
-        await new_book.genre.add(genre)
+        await new_book.authors.add(*authors)
+        await new_book.genres.add(*genres)
         await new_book.save()
 
-        created_book = await Book.get(id=new_book.id).select_related("author", "genre")
+        created_book = await Book.get(id=new_book.id).prefetch_related('authors', 'genres')
 
-        return BookResponse.from_orm(created_book)
+        return created_book

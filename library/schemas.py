@@ -44,8 +44,8 @@ class GenreResponse(CreateGenre):
 
 class CreateBook(BaseModel):
     title: str = Field("Название книги", min_length=1, max_length=200)
-    author_id: int
-    genre_id: int
+    authors_id: list[int]
+    genres_id: list[int]
     summary: str = Field("Описание книги")
 
 
@@ -53,10 +53,11 @@ class BookResponse(BaseModel):
     id: int
     title: str
     summary: str
-    author: AuthorResponse
-    genre: GenreResponse
+    _author: list[AuthorResponse]
+    _genre: list[GenreResponse]
     updated_at: datetime
     created_at: datetime
 
     class Config:
         orm_mode = True
+        include_private_fields = True
