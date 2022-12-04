@@ -1,7 +1,8 @@
 from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookResponse
 from .models import Genre, Author, Book
 from .exceptions import (
-    GenreAlreadyExistError, GenresNotFoundError, AuthorAlreadyExistError, AuthorsNotFoundError, BookAlreadyExistError
+    GenreAlreadyExistError, GenresNotFoundError, AuthorAlreadyExistError, AuthorsNotFoundError,
+    BookAlreadyExistError, BooksNotFoundError
 )
 
 
@@ -87,4 +88,18 @@ class BookCreationCase:
 
         created_book = await Book.get(id=new_book.id).prefetch_related('authors', 'genres')
 
-        return created_book
+        return BookResponse.from_orm(created_book)
+
+
+class GetBooksCase:
+    """
+    Кейс получения всех книг
+    """
+
+    async def __call__(self):
+
+        all_books = await Book.all().prefetch_related('authors', 'genres')
+        if all_books:
+            return all_books
+
+        raise BooksNotFoundError

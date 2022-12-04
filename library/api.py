@@ -3,7 +3,9 @@ from fastapi import APIRouter, Depends
 from users.security import get_current_admin, get_current_user
 from users.models import Users
 from library import schemas
-from library.use_cases import GenreCreationCase, GetGenresCase, AuthorCreationCase, GetAuthorsCase, BookCreationCase
+from library.use_cases import (
+    GenreCreationCase, GetGenresCase, AuthorCreationCase, GetAuthorsCase, BookCreationCase, GetBooksCase
+)
 
 
 library_router = APIRouter(prefix="/library", tags=["library"])
@@ -65,4 +67,5 @@ async def get_all_books(current_user: Users = Depends(get_current_user)):
     Список всех книг
     """
 
-    return None
+    all_books = GetBooksCase()
+    return await all_books()
