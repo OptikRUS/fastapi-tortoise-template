@@ -51,12 +51,12 @@ def sign_jwt(username: str) -> Token:
     """
     payload = {
         "username": username,
-        "expires": time.time() + auth_config["expires"]
+        "expires": time.time() + auth_config.get("expires")
     }
     token = jwt.encode(
         payload=payload,
-        key=auth_config["secret_key"],
-        algorithm=auth_config["algorithm"]
+        key=auth_config.get("secret_key"),
+        algorithm=auth_config.get("algorithm")
     )
     return Token(access_token=token)
 
@@ -68,12 +68,11 @@ def decode_jwt(token: str) -> dict:
     try:
         decoded_token = jwt.decode(
             jwt=token,
-            key=auth_config["secret_key"],
-            algorithms=auth_config["algorithm"],
+            key=auth_config.get("secret_key"),
+            algorithms=auth_config.get("algorithm"),
         )
-        if decoded_token["expires"] >= time.time():
+        if decoded_token.get("expires") >= time.time():
             return decoded_token
-        raise UserTokenTimeoutError
     except Exception as e:
         return {"error": e}
 
@@ -85,7 +84,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> DB_User:
     token_dict = decode_jwt(token)
     if not token_dict:
         raise UserNotAuthError
-    user = await DB_User.get_or_none(username=token_dict['username'])
+    user = await DB_User.get_or_none(username=token_dict.get('username'))
+    if not user:
+        raise UserTokenTimeoutError
     if user is None:
         raise UserNotAuthError
     return user
@@ -99,7 +100,9 @@ async def get_current_admin(token: str = Depends(oauth2_scheme)) -> DB_User:
     token_dict = decode_jwt(token)
     if not token_dict:
         raise UserNotAuthError
-    user = await DB_User.get_or_none(username=token_dict['username'])
+    user = await DB_User.get_or_none(username=token_dict.get('username'))
+    if not user:
+        raise UserTokenTimeoutError
     if not user.is_superuser:
         raise UserForbiddenError
     return user
