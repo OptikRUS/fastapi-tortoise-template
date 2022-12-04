@@ -68,7 +68,7 @@ class AuthSettings(BaseSettings):
     type: str = Field("Bearer")
     password_time: int = Field(3)
     algorithm: str = Field("HS256")
-    expires: int = Field(60*60, env="TOKEN_EXPIRES")
+    expires: int = Field(60*60, env="TOKEN_EXPIRES")  # 1 час
     hasher_deprecated: str = Field("auto")
     hasher_schemes: list[str] = Field(["bcrypt"])
     token_url: str = Field("users/login")
