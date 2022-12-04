@@ -32,7 +32,7 @@ class UserNotActiveError(BaseUserException):
 
 class UserTokenTimeoutError(BaseUserException):
     message: str = "Время токена истекло."
-    status: int = status.HTTP_400_BAD_REQUEST
+    status: int = status.HTTP_401_UNAUTHORIZED
 
 
 class UserForbiddenError(BaseUserException):

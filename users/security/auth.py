@@ -83,11 +83,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> DB_User:
     """
     token_dict = decode_jwt(token)
     if not token_dict:
-        raise UserNotAuthError
-    user = await DB_User.get_or_none(username=token_dict.get('username'))
-    if not user:
         raise UserTokenTimeoutError
-    return user
+    user = await DB_User.get_or_none(username=token_dict.get('username'))
+    if user:
+        return user
+    raise UserNotAuthError
 
 
 async def get_current_admin(token: str = Depends(oauth2_scheme)) -> DB_User:
@@ -97,14 +97,11 @@ async def get_current_admin(token: str = Depends(oauth2_scheme)) -> DB_User:
 
     token_dict = decode_jwt(token)
     if not token_dict:
-        raise UserNotAuthError
-
-    user = await DB_User.get_or_none(username=token_dict.get('username'))
-    if not user:
         raise UserTokenTimeoutError
-    if user.is_superuser:
-        return user
-    raise UserForbiddenError
+    user = await DB_User.get_or_none(username=token_dict.get('username'))
+    if not user.is_superuser:
+        raise UserForbiddenError
+    return user
 
 
 async def get_current_active_user(current_user: DB_User = Depends(get_current_user)) -> DB_User:
