@@ -4,9 +4,10 @@ from pydantic import BaseSettings, Field
 class SiteSettings(BaseSettings):
     host: str = Field("127.0.0.1", env="SITE_HOST")
     port: int = Field(8000, env="SITE_PORT")
+    loop: str = Field("asyncio")  # для асинхронного дебага
+    log_level: str = Field("info", env="SITE_LOG_LEVEL")
     # reload: bool = Field(True, env="SITE_RELOAD")
     # reload_delay: float = Field(0.25, env="SITE_RELOAD_DELAY")
-    log_level: str = Field("info", env="SITE_LOG_LEVEL")
 
     class Config:
         env_file = ".env"
@@ -26,16 +27,16 @@ class ApplicationSettings(BaseSettings):
 class DataBaseSettings(BaseSettings):
 
     # postgres
-    # port: str = Field("5432", env="DATABASE_PORT")
-    # user: str = Field("postgres", env="DATABASE_USER")
-    # host: str = Field("db_app", env="DATABASE_HOST")
-    # password: str = Field("postgres", env="DATABASE_PASSWORD")
-    # db_name: str = Field("postgres", env="DATABASE_NAME")
-    # database_url: str = Field("postgres://{user}:{password}@{host}:{port}/{database}")
+    user: str = Field("postgres", env="DATABASE_USER")
+    password: str = Field("postgres", env="DATABASE_PASSWORD")
+    port: str = Field("5432", env="DATABASE_PORT")
+    db_name: str = Field("db_app", env="DATABASE_NAME")
+    host: str = Field("localhost", env="DATABASE_HOST")
+    database_url: str = Field("postgres://{user}:{password}@{host}:{port}/{db_name}")
 
     # sqlite
-    db_name: str = Field("db_app", env="DATABASE_NAME")
-    database_url: str = Field("sqlite://{db_name}.db")
+    # db_name: str = Field("db_app", env="DATABASE_NAME")
+    # database_url: str = Field("sqlite://{db_name}.db")
 
     class Config:
         env_file = ".env"
