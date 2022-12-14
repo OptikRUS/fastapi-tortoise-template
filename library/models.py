@@ -14,6 +14,8 @@ class Author(models.Model):
     date_of_birth = fields.DateField(null=True)
     date_of_death = fields.DateField(null=True)
 
+    books: fields.ManyToManyRelation["Book"]
+
     @property
     def full_name(self) -> str:
         """
@@ -30,6 +32,8 @@ class Author(models.Model):
 
     class PydanticMeta:
         computed = ["full_name"]
+        # Если мы должны исключить необработанные поля (те, которые имеют суффиксы _id) отношений
+        exclude_raw_fields: bool = True
 
     class Meta:
         table = 'authors'
@@ -42,6 +46,8 @@ class Genre(models.Model):
     """
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=200, unique=True)
+
+    books: fields.ManyToManyRelation["Book"]
 
     def __str__(self):
         return self.name
