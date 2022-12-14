@@ -4,7 +4,7 @@ from users.security import get_current_admin, get_current_user
 from users.models import Users
 from library import schemas
 from library.use_cases import (
-    GenreCreationCase, GetGenresCase, AuthorCreationCase, GetAuthorsCase, BookCreationCase, GetBooksCase
+    GenreCreationCase, GetGenresCase, AuthorCreationCase, GetAuthorsCase, BookCreationCase, GetBooksCase, GetBookCase
 )
 
 
@@ -69,3 +69,13 @@ async def get_all_books(current_user: Users = Depends(get_current_user)):
 
     all_books = GetBooksCase()
     return await all_books()
+
+
+@library_router.get("/{book_id}", status_code=200, response_model=schemas.BookResponse)
+async def get_book_info(book_id: int, current_user: Users = Depends(get_current_user)):
+    """
+    Получение информации о книге
+    """
+
+    get_book = GetBookCase()
+    return await get_book(book_id)

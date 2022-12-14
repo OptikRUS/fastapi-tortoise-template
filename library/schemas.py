@@ -53,11 +53,10 @@ class BookResponse(BaseModel):
     id: int
     title: str
     summary: str
-    _author: list[AuthorResponse]
-    _genre: list[GenreResponse]
+    authors: list[AuthorResponse]
+    genres: list[GenreResponse]
     updated_at: datetime
     created_at: datetime
 
     class Config:
         orm_mode = True
-        include_private_fields = True

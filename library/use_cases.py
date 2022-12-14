@@ -2,7 +2,7 @@ from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, C
 from .models import Genre, Author, Book
 from .exceptions import (
     GenreAlreadyExistError, GenresNotFoundError, AuthorAlreadyExistError, AuthorsNotFoundError,
-    BookAlreadyExistError, BooksNotFoundError
+    BookAlreadyExistError, BooksNotFoundError, BookNotFoundError
 )
 
 
@@ -86,9 +86,15 @@ class BookCreationCase:
         await new_book.genres.add(*genres)
         await new_book.save()
 
-        created_book = await Book.get(id=new_book.id).prefetch_related('authors', 'genres')
+        created_book = await Book.get(id=new_book.id)
 
-        return BookResponse.from_orm(created_book)
+        # отдельные запросы в бд для связных полей
+        book_response = dict(
+            created_book,
+            authors=await created_book.authors,
+            genres=await created_book.genres
+        )
+        return BookResponse(**book_response)
 
 
 class GetBooksCase:
@@ -97,9 +103,36 @@ class GetBooksCase:
     """
 
     async def __call__(self):
+        books_response = list()
 
         all_books = await Book.all().prefetch_related('authors', 'genres')
         if all_books:
-            return all_books
-
+            for book in all_books:
+                print()
+                books_response.append(
+                    dict(
+                        book,
+                        authors=await book.authors,
+                        genres=await book.genres
+                    )
+                )
+            return books_response
         raise BooksNotFoundError
+
+
+class GetBookCase:
+    """
+    Кейс получения информации о книге
+    """
+
+    async def __call__(self, book_id) -> BookResponse:
+
+        book = await Book.get_or_none(id=book_id)
+        if book:
+            book_response = dict(
+                book,
+                authors=await book.authors,
+                genres=await book.genres
+            )
+            return BookResponse(**book_response)
+        raise BookNotFoundError
