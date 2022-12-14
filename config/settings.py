@@ -7,7 +7,7 @@ class SiteSettings(BaseSettings):
     loop: str = Field("asyncio")  # для асинхронного дебага
     log_level: str = Field("info", env="SITE_LOG_LEVEL")
     # reload: bool = Field(True, env="SITE_RELOAD")
-    # reload_delay: float = Field(0.25, env="SITE_RELOAD_DELAY")
+    reload_delay: float = Field(0.25, env="SITE_RELOAD_DELAY")
 
     class Config:
         env_file = ".env"
@@ -34,7 +34,7 @@ class DataBaseSettings(BaseSettings):
     host: str = Field("localhost", env="DATABASE_HOST")
     database_url: str = Field("postgres://{user}:{password}@{host}:{port}/{db_name}")
 
-    # sqlite
+    # настройки для sqlite
     # db_name: str = Field("db_app", env="DATABASE_NAME")
     # database_url: str = Field("sqlite://{db_name}.db")
 
