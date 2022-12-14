@@ -11,8 +11,8 @@ class Users(models.Model):
     first_name = fields.CharField(max_length=50, null=True)
     last_name = fields.CharField(max_length=50, null=True)
     patronymic_name = fields.CharField(max_length=50, null=True)
-    email = fields.CharField(null=False, max_length=255)
-    phone = fields.CharField(null=True, max_length=15)
+    email = fields.CharField(null=False, max_length=255, unique=True)
+    phone = fields.CharField(null=True, max_length=15, unique=True)
     password = fields.CharField(max_length=128, null=True)
     is_active = fields.BooleanField(default=True)
     is_approved = fields.BooleanField(default=False)
@@ -26,6 +26,9 @@ class Users(models.Model):
         """
         if self.first_name and self.last_name and self.patronymic_name:
             return f"{self.last_name} {self.first_name} {self.patronymic_name}"
+        return self.username
+
+    def __str__(self):
         return self.username
 
     class PydanticMeta:
