@@ -17,14 +17,14 @@ services:
     restart: always
     networks:
       - custom
+    env_file:
+      - .env
 
 # application service
   fastapi-app:
     container_name: ${APP_NAME}
     build: .
     command: python run.py
-    env_file:
-      - .env
     ports:
       - ${SITE_PORT}:${SITE_PORT}
     depends_on:
@@ -32,6 +32,8 @@ services:
     restart: always
     networks:
       - custom
+    env_file:
+      - .env
 
 networks:
   custom:
