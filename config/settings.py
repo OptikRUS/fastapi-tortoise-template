@@ -8,7 +8,6 @@ class SiteSettings(BaseSettings):
     log_level: str = Field("info", env="SITE_LOG_LEVEL")
     # reload: bool = Field(True, env="SITE_RELOAD")  # перезагрузка uvicorn
     reload_delay: float = Field(0.25, env="SITE_RELOAD_DELAY")
-    version: str = Field("0.1.0", env="APP_VERSION")
 
     class Config:
         env_file = ".env"
@@ -19,6 +18,7 @@ class ApplicationSettings(BaseSettings):
     title: str = Field("Fastapi with tortoise ORM template")
     description = Field("Шаблон приложения на tortoise ORM")
     debug: bool = Field(True, env="DEBUG")
+    version: str = Field("0.1.0", env="APP_VERSION")
 
     class Config:
         env_file = ".env"
