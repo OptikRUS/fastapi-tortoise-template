@@ -1,11 +1,10 @@
-version: "3.11"
+version: ${APP_VERSION}
 
 services:
 
  # database service
   database:
     image: postgres:14-alpine
-    container_name: ${DATABASE_HOST}
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
@@ -16,6 +15,20 @@ services:
     ports:
       - ${DATABASE_PORT}:5432
     restart: always
+    networks:
+      - custom
+
+# application service
+  fastapi-app:
+    container_name: ${APP_NAME}
+    build: .
+    command: python run.py
+    env_file:
+      - .env
+    ports:
+      - ${SITE_PORT}:${SITE_PORT}
+    depends_on:
+      - database
     networks:
       - custom
 
