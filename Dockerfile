@@ -1,6 +1,9 @@
 # установка python 3.11 с официального докерхаба
 FROM python:3.11.0rc2
 
+# хост базы данных для докера
+ENV DOCKER_ENVIRONMENT=True
+
 # установка рабочей директории
 WORKDIR /
 
