@@ -2,7 +2,7 @@
 FROM python:3.11.0rc2
 
 # хост базы данных для докера
-ENV DOCKER_ENVIRONMENT=True
+ENV DATABASE_HOST=database
 
 # установка рабочей директории
 WORKDIR /
