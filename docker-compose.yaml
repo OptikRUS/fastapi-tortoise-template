@@ -29,6 +29,7 @@ services:
       - ${SITE_PORT}:${SITE_PORT}
     depends_on:
       - database
+    restart: always
     networks:
       - custom
 
