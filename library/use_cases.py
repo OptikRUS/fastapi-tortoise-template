@@ -80,20 +80,18 @@ class BookCreationCase:
         if book_exist:
             raise exc.BookAlreadyExistError
 
-        print()
         new_book = await Book.create(**book.dict())
-        print()
-        # await new_book.author.add(author)
+
+        # добавление зависимости m2m
         await new_book.genres.add(*genres)
         await new_book.save()
 
         created_book = await Book.get(id=new_book.id).select_related('author')
 
-        # отдельные запросы в бд для связных полей
         book_response = dict(
             created_book,
-            author=created_book.author,
-            genres=await created_book.genres
+            author=created_book.author,  # авторы уже подтянуты через select_related
+            genres=await created_book.genres  # отдельные запросы в бд для m2m
         )
         return BookResponse(**book_response)
 
@@ -104,18 +102,22 @@ class GetBooksCase:
     """
 
     async def __call__(self):
-        books_response = list()
+        found_books = list()
 
-        all_books = await Book.all().prefetch_related('author', 'genres')
+        all_books = await Book.all().select_related('author')
         if all_books:
             for book in all_books:
-                books_response.append(
+                found_books.append(
                     dict(
                         book,
                         author=book.author,
                         genres=await book.genres
                     )
                 )
+            books_response = dict(
+                count=len(found_books),
+                found_books=found_books
+            )
             return books_response
         raise exc.BooksNotFoundError
 
@@ -126,7 +128,6 @@ class GetBookCase:
     """
 
     async def __call__(self, search_book: str):
-
         found_books = list()
 
         books_search = await Book.filter(
@@ -138,7 +139,7 @@ class GetBookCase:
                 found_books.append(
                     dict(
                         book,
-                        author=await book.author,
+                        author=await book.author,  # подтягивание авторов без select_related
                         genres=await book.genres
                     )
                 )
