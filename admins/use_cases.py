@@ -1,12 +1,20 @@
-from users.models import User, UserForAdminResponse
+from typing import Optional
+
+from users.models import User
+from .schemas import UserForAdminResponse
+from users.exceptions import UserNotFoundError
 
 
-class GetAllUsers:
+class GetUsersForAdmin:
     """
-    Кейс получения всех пользователей для админа
+    Кейс получения пользователей для админа
     """
 
-    async def __call__(self):
-        all_users = await UserForAdminResponse.from_queryset(User.all())
-        if all_users:
-            return all_users
+    async def __call__(self, user_id: Optional[int]):
+        if user_id:
+            user = await User.get_or_none(id=user_id)
+            if not user:
+                raise UserNotFoundError
+            return UserForAdminResponse.from_orm(user)
+        users = await User.all()
+        return users
