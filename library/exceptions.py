@@ -1,6 +1,10 @@
 from fastapi import status
 from .entities import BaseLibraryException
 
+"""
+Пример через HTTP Exception
+"""
+
 
 class LibraryNotFoundError(BaseLibraryException):
     status: int = status.HTTP_404_NOT_FOUND
