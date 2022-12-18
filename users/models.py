@@ -44,4 +44,3 @@ UserUpdate = pydantic_model_creator(
     User, name="UserUpdate", exclude=("id", "is_active", "is_approved", "is_superuser"), exclude_readonly=True
 )
 UserResponse = pydantic_model_creator(User, name="UserResponse", exclude_readonly=True)
-UserForAdminResponse = pydantic_model_creator(User, name="UsersForAdminResponse")
