@@ -3,10 +3,21 @@ from typing import Any, Optional
 from fastapi import HTTPException
 
 
-class BaseUserException(HTTPException):
+class BaseUserException(Exception):
+    """
+    Базовая ошибка пользователя
+    """
+
+    status: int
+    message: str
+    reason: str
+
+
+class BaseUserHTTPException(HTTPException):
     """
     Базовая HTTP-ошибка пользователя
     """
+
     status: int
     message: Any = None
     headers: Optional[dict[str, Any]] = None
