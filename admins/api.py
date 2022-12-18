@@ -1,27 +1,19 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
-from users.models import User, UserForAdminResponse
+from users.models import User
 from users.security import get_current_admin
-from users.use_cases import GetUser
-from .use_cases import GetAllUsers
+from .schemas import UserForAdminResponse
+from .use_cases import GetUsersForAdmin
 
 
 admins_router = APIRouter(prefix="/admins", tags=["admins"])
 
 
-@admins_router.get("/all_users", response_model=list[UserForAdminResponse])
-async def get_all_users_for_admin(current_admin: User = Depends(get_current_admin)):
+@admins_router.get("/users", response_model=list[UserForAdminResponse] | UserForAdminResponse)
+async def get_users_for_admin(user_id: int = Query(None), current_admin: User = Depends(get_current_admin)):
     """
-    Список всех пользователей для админа
+    Список пользователей для админа
     """
-    all_users = GetAllUsers()
-    return await all_users()
 
-
-@admins_router.get("/{user_id}", response_model=UserForAdminResponse)
-async def get_user_for_admin(user_id: int, current_admin: User = Depends(get_current_admin)):
-    """
-    Получить информации о пользователе для админа
-    """
-    get_some_user = GetUser()
-    return await get_some_user(user_id)
+    users = GetUsersForAdmin()
+    return await users(user_id=user_id)
