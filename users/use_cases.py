@@ -1,5 +1,5 @@
 from .schemas import UserRegister
-from .models import Users, UserResponse, UserUpdate
+from .models import User, UserResponse, UserUpdate
 from .security.schemas import Token
 from .security import authenticate_user, sign_jwt, get_hasher
 from .exceptions import (
@@ -16,7 +16,7 @@ class UserAuth:
     """
 
     async def __call__(self, username: str, password: str) -> Token:
-        user: Users = await authenticate_user(username=username, password=password)
+        user: User = await authenticate_user(username=username, password=password)
         if user:
             access_token: Token = sign_jwt(username=username)
             return access_token
@@ -34,20 +34,20 @@ class UserRegistration:
     @su_registration(super_users_config.get("superusers"))
     async def __call__(self, user: UserRegister) -> UserResponse:
 
-        username = await Users.get_or_none(username=user.username)
+        username = await User.get_or_none(username=user.username)
         if username:
             raise UserAlreadyRegisteredError
 
-        user_email = await Users.get_or_none(email=user.email)
+        user_email = await User.get_or_none(email=user.email)
         if user_email:
             raise UserEmailTakenError
 
-        user_phone = await Users.get_or_none(phone=user.phone)
+        user_phone = await User.get_or_none(phone=user.phone)
         if user_phone:
             raise UserPhoneTakenError
 
         user.password = self.hasher.hash(user.password)
-        new_user = await Users.create(**user.dict(exclude_unset=True))
+        new_user = await User.create(**user.dict(exclude_unset=True))
         return await UserResponse.from_tortoise_orm(new_user)
 
 
@@ -57,7 +57,7 @@ class GetUser:
     """
 
     async def __call__(self, user_id: int):
-        user = await Users.get_or_none(id=user_id)
+        user = await User.get_or_none(id=user_id)
         if user:
             return user
         raise UserNotFoundError
@@ -68,7 +68,7 @@ class UpdateUserProfile:
     Кейс изменения информации пользователя
     """
 
-    def __init__(self, current_user: Users) -> None:
+    def __init__(self, current_user: User) -> None:
         self.current_user = current_user
 
     async def __call__(self, user_data: dict) -> UserUpdate:

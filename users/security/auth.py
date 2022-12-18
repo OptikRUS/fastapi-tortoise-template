@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 
 
 from .schemas import Token
-from ..models import Users as DB_User
+from ..models import User as DB_User
 from ..exceptions import UserNotAuthError, UserForbiddenError, UserNotActiveErrorHTTP, UserTokenTimeOutError
 
 from config import auth_config

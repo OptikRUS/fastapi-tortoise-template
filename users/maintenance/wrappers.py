@@ -1,4 +1,4 @@
-from ..models import Users, UserResponse
+from ..models import User, UserResponse
 from ..schemas import UserRegister
 
 

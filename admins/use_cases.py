@@ -1,4 +1,4 @@
-from users.models import Users, UserForAdminResponse
+from users.models import User, UserForAdminResponse
 
 
 class GetAllUsers:
@@ -7,6 +7,6 @@ class GetAllUsers:
     """
 
     async def __call__(self):
-        all_users = await UserForAdminResponse.from_queryset(Users.all())
+        all_users = await UserForAdminResponse.from_queryset(User.all())
         if all_users:
             return all_users

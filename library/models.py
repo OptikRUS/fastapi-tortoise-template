@@ -14,7 +14,7 @@ class Author(models.Model):
     date_of_birth = fields.DateField(null=True)
     date_of_death = fields.DateField(null=True)
 
-    books: fields.ManyToManyRelation["Book"]
+    book: fields.ForeignKeyRelation["Book"]
 
     @property
     def full_name(self) -> str:
@@ -62,8 +62,8 @@ class Book(models.Model):
     """
     id = fields.IntField(pk=True)
     title = fields.CharField(max_length=200, unique=True)
-    authors: fields.ManyToManyRelation[Author] = fields.ManyToManyField(
-        'models.Author', related_name='books', on_delete=fields.SET_NULL, through='books_authors'
+    author: fields.ForeignKeyRelation[Author] = fields.ForeignKeyField(
+        'models.Author', related_name='books', on_delete=fields.SET_NULL, null=True
     )
     summary = fields.TextField()
     genres: fields.ManyToManyRelation[Genre] = fields.ManyToManyField(

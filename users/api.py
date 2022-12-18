@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from .models import Users, UserResponse, UserUpdate
+from .models import User, UserResponse, UserUpdate
 from .schemas import UserRegister
 from .security import get_current_user
 from .security.schemas import Token
@@ -31,7 +31,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @users_router.get("/me", status_code=200, response_model=UserResponse)
-async def get_me(current_user: Users = Depends(get_current_user)):
+async def get_me(current_user: User = Depends(get_current_user)):
     """
     Получить информацию о себе
     """
@@ -52,7 +52,7 @@ async def get_user(user_id: int):
 @users_router.put(
     "/update_me", response_model=UserUpdate, responses={404: {"model": HTTPNotFoundError}}
 )
-async def update_me(user: UserUpdate, current_user: Users = Depends(get_current_user)):
+async def update_me(user: UserUpdate, current_user: User = Depends(get_current_user)):
     """
     Изменение информации пользователя
     """

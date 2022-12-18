@@ -2,7 +2,7 @@ from tortoise import fields, models
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 
-class Users(models.Model):
+class User(models.Model):
     """
     Модель пользователя
     """
@@ -35,10 +35,13 @@ class Users(models.Model):
         computed = ["full_name_or_username"]
         exclude = ["password"]
 
+    class Meta:
+        table = "users"
+
 
 # определение схем, но не такое гибкое
 UserUpdate = pydantic_model_creator(
-    Users, name="UserUpdate", exclude=("id", "is_active", "is_approved", "is_superuser"), exclude_readonly=True
+    User, name="UserUpdate", exclude=("id", "is_active", "is_approved", "is_superuser"), exclude_readonly=True
 )
-UserResponse = pydantic_model_creator(Users, name="UserResponse", exclude_readonly=True)
-UserForAdminResponse = pydantic_model_creator(Users, name="UsersForAdminResponse")
+UserResponse = pydantic_model_creator(User, name="UserResponse", exclude_readonly=True)
+UserForAdminResponse = pydantic_model_creator(User, name="UsersForAdminResponse")
