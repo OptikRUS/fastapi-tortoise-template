@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 from .schemas import Token
 from ..models import Users as DB_User
-from ..exceptions import UserNotAuthError, UserForbiddenError, UserNotActiveError, UserTokenTimeoutError
+from ..exceptions import UserNotAuthError, UserForbiddenError, UserNotActiveErrorHTTP, UserTokenTimeOutError
 
 from config import auth_config
 
@@ -83,7 +83,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> DB_User:
     """
     token_dict = decode_jwt(token)
     if not token_dict:
-        raise UserTokenTimeoutError
+        raise UserTokenTimeOutError
     user = await DB_User.get_or_none(username=token_dict.get('username'))
     if user:
         return user
@@ -97,7 +97,7 @@ async def get_current_admin(token: str = Depends(oauth2_scheme)) -> DB_User:
 
     token_dict = decode_jwt(token)
     if not token_dict:
-        raise UserTokenTimeoutError
+        raise UserTokenTimeOutError
     user = await DB_User.get_or_none(username=token_dict.get('username'))
     if not user.is_superuser:
         raise UserForbiddenError
@@ -109,5 +109,5 @@ async def get_current_active_user(current_user: DB_User = Depends(get_current_us
     Проверка авторизации и активности пользователя
     """
     if not current_user.is_active:
-        raise UserNotActiveError
+        raise UserNotActiveErrorHTTP
     return current_user
