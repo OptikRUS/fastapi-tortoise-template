@@ -60,3 +60,8 @@ class BookResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class BooksResponse(BaseModel):
+    count: int
+    found_books: list[BookResponse]

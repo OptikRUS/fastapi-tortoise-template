@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from users.security import get_current_admin, get_current_user
 from users.models import User
@@ -58,7 +58,7 @@ async def register_book_for_admin(book: schemas.CreateBook, current_admin: User 
     return await book_creation(book)
 
 
-@library_router.get("/all_books", status_code=200, response_model=list[schemas.BookResponse])
+@library_router.get("/all_books", status_code=200, response_model=schemas.BooksResponse)
 async def get_all_books(current_user: User = Depends(get_current_user)):
     """
     Список всех книг
@@ -68,11 +68,11 @@ async def get_all_books(current_user: User = Depends(get_current_user)):
     return await all_books()
 
 
-@library_router.get("/{book_id}", status_code=200, response_model=schemas.BookResponse)
-async def get_book_info(book_id: int, current_user: User = Depends(get_current_user)):
+@library_router.get("/search_book", status_code=200, response_model=schemas.BooksResponse)
+async def get_book_info(search_book: str = Query(None), current_user: User = Depends(get_current_user)):
     """
-    Получение информации о книге
+    Поиск книг по названию или описанию
     """
 
     get_book = library_cases.GetBookCase()
-    return await get_book(book_id)
+    return await get_book(search_book)

@@ -1,3 +1,5 @@
+from tortoise.expressions import Q
+
 from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookResponse
 from .models import Genre, Author, Book
 from library import exceptions as exc
@@ -107,7 +109,6 @@ class GetBooksCase:
         all_books = await Book.all().prefetch_related('author', 'genres')
         if all_books:
             for book in all_books:
-                print()
                 books_response.append(
                     dict(
                         book,
@@ -121,17 +122,29 @@ class GetBooksCase:
 
 class GetBookCase:
     """
-    Кейс получения информации о книге
+    Кейс поиска книг по названию или описанию
     """
 
-    async def __call__(self, book_id) -> BookResponse:
+    async def __call__(self, search_book: str):
 
-        book = await Book.get_or_none(id=book_id)
-        if book:
-            book_response = dict(
-                book,
-                author=await book.author,
-                genres=await book.genres
+        found_books = list()
+
+        books_search = await Book.filter(
+            Q(title__icontains=search_book) |
+            Q(summary__icontains=search_book)
+        )
+        if books_search:
+            for book in books_search:
+                found_books.append(
+                    dict(
+                        book,
+                        author=await book.author,
+                        genres=await book.genres
+                    )
+                )
+            books_response = dict(
+                count=len(found_books),
+                found_books=found_books
             )
-            return BookResponse(**book_response)
+            return books_response
         raise exc.BookNotFoundError
