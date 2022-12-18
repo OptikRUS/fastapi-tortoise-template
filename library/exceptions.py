@@ -18,7 +18,7 @@ class LibraryFullNameError(LibraryNotFoundError):
     message: str = "Отсутствует ФИО автора."
 
 
-class GenreAlreadyExistError(LibraryNotFoundError):
+class GenreAlreadyExistError(LibraryAlreadyExistError):
     message: str = "Такой жанр уже существует."
 
 
