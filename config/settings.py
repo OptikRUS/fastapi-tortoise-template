@@ -52,7 +52,12 @@ class DataBaseConnections(BaseSettings):
 
 
 class DataBaseModels(BaseSettings):
-    models: list[str] = Field(["aerich.models", "library.models", "users.models"])
+    models: list[str] = Field(
+        [
+            "users.models",
+            "library.models",
+        ]
+    )
 
 
 class DataBaseSettings(BaseSettings):
