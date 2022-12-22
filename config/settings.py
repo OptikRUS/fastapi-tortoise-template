@@ -1,4 +1,4 @@
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings, Field, validator
 
 
 class SiteSettings(BaseSettings):
@@ -43,17 +43,20 @@ class DataBaseCredentials(BaseSettings):
 
 class DataBaseConnections(BaseSettings):
     # postgres url
-    default: str = Field(
-        "postgres://{user}:{password}@{host}:{port}/{db_name}".format(**DataBaseCredentials().dict())
-    )
+    default: str = Field("postgres://{user}:{password}@{host}:{port}/{db_name}")
 
     # sqlite url
-    # default: str = Field("sqlite://{db_name}.db".format(**DataBaseSettings().dict()))
+    # default: str = Field("sqlite://{db_name}.db")
+
+    @validator("default", pre=True)
+    def generate_db_url(cls, db_url):
+        return db_url.format(**DataBaseCredentials().dict())
 
 
 class DataBaseModels(BaseSettings):
     models: list[str] = Field(
         [
+            "aerich.models",
             "users.models",
             "library.models",
         ]
