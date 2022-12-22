@@ -1,7 +1,9 @@
 # Шаблон приложения на tortoise ORM
 
+## Запуск проекта:
+
 Установка зависимостей:
-`pip install -r requirements.txt `
+`pip install -r requirements.txt`
 
 Добавить в .env список username, которые станут админами при регистрации (django по умолчанию):
 `SUPER_USERS=["django", "admin", "superuser"]`
@@ -21,3 +23,10 @@
 
 2. Открыть в браузере:
 `http://127.0.0.1:8000/docs`
+
+
+## Полезное:
+1. Инициализация базы данных в **aerich**:
+`aerich init -t config.database_config`
+2. Инициализация миграций **aerich**:
+`aerich init-db`
