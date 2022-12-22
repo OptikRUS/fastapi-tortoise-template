@@ -14,7 +14,7 @@ class Author(models.Model):
     date_of_birth = fields.DateField(null=True)
     date_of_death = fields.DateField(null=True)
 
-    book: fields.ForeignKeyRelation["Book"]
+    books: fields.ForeignKeyRelation["Book"]
 
     @property
     def full_name(self) -> str:
