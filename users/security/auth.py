@@ -22,6 +22,10 @@ class UserLogin:
     """
     Кейс получения токена
     """
+    secret_key: str = auth_config.get("secret_key")
+    algorithm: str = auth_config.get("algorithm")
+    expires: int = auth_config.get("expires")
+
     def __init__(self, username: str, password: str) -> None:
         self.username, self.password = username, password
         self.password_hash: CryptContext = hasher
@@ -56,12 +60,12 @@ class UserLogin:
         """
         payload = {
             "username": self.username,
-            "expires": time.time() + auth_config.get("expires")
+            "expires": time.time() + self.expires
         }
         token = jwt.encode(
             payload=payload,
-            key=auth_config.get("secret_key"),
-            algorithm=auth_config.get("algorithm")
+            key=self.secret_key,
+            algorithm=self.algorithm
         )
         return token
 
@@ -70,6 +74,9 @@ class UserAuth:
     """
     Класс авторизации пользователя
     """
+    secret_key: str = auth_config.get("secret_key")
+    algorithm: str = auth_config.get("algorithm")
+
     def __init__(self, user_type: UserType) -> None:
         self.user_type = user_type
 
@@ -96,8 +103,8 @@ class UserAuth:
         try:
             decoded_token = jwt.decode(
                 jwt=token,
-                key=auth_config.get("secret_key"),
-                algorithms=auth_config.get("algorithm"),
+                key=self.secret_key,
+                algorithms=self.algorithm,
             )
             if decoded_token.get("expires") >= time.time():
                 return decoded_token
