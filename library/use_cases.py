@@ -1,7 +1,7 @@
 from typing import Optional
 from tortoise.expressions import Q
 
-from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookResponse
+from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookDetailResponse
 from .models import Genre, Author, Book
 from library import exceptions as exc
 
@@ -73,7 +73,7 @@ class BookCreationCase:
     Кейс создания книги
     """
 
-    async def __call__(self, book: CreateBook) -> BookResponse:
+    async def __call__(self, book: CreateBook) -> BookDetailResponse:
 
         genres = await Genre.filter(id__in=book.genres_id)
         if not genres:
@@ -100,7 +100,7 @@ class BookCreationCase:
             author=created_book.author,  # авторы уже подтянуты через select_related
             genres=await created_book.genres  # отдельные запросы в бд для m2m
         )
-        return BookResponse(**book_response)
+        return BookDetailResponse(**book_response)
 
 
 class GetBooksCase:
@@ -111,25 +111,22 @@ class GetBooksCase:
     async def __call__(self, book_id: Optional[int]):
 
         if not book_id:
-            found_books = list()
-            all_books = await Book.all().select_related('author')
+            all_books = await Book.all()
             if all_books:
-                for book in all_books:
-                    found_books.append(
-                        dict(
-                            book,
-                            author=book.author,
-                            genres=await book.genres
-                        )
-                    )
-                books_response = dict(
-                    count=len(found_books),
-                    found_books=found_books
-                )
-                return books_response
+                return all_books
             raise exc.BooksNotFoundError
 
-        book = await Book.get(id=book_id)
+        book = await Book.filter(id=book_id)
+        if book:
+            return book
+        raise exc.BookNotFoundError
+
+
+class GetBookDetailCase:
+
+    async def __call__(self, book_id: int):
+
+        book = await Book.get_or_none(id=book_id)
         if book:
             book_response = dict(
                 book,

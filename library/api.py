@@ -48,7 +48,7 @@ async def get_authors(author_id: int = Query(None), current_user: User = Depends
     return await author(author_id)
 
 
-@library_router.post("/create_book", status_code=201, response_model=schemas.BookResponse)
+@library_router.post("/create_book", status_code=201, response_model=schemas.BookDetailResponse)
 async def register_book_for_admin(book: schemas.CreateBook, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Регистрации книги админом
@@ -58,13 +58,23 @@ async def register_book_for_admin(book: schemas.CreateBook, current_admin: User 
     return await book_creation(book)
 
 
-@library_router.get("/books", status_code=200, response_model=schemas.BooksResponse | schemas.BookResponse)
+@library_router.get("/books", status_code=200, response_model=list[schemas.BookResponse])
 async def get_books(book_id: int = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Получение книги по id или всех книг
     """
 
     books = library_cases.GetBooksCase()
+    return await books(book_id)
+
+
+@library_router.get("/books/{book_id}", status_code=200, response_model=schemas.BookDetailResponse)
+async def get_book_detail(book_id: int, current_user: User = Depends(UserAuth(UserType.ANY))):
+    """
+    Получение информации книги по id
+    """
+
+    books = library_cases.GetBookDetailCase()
     return await books(book_id)
 
 

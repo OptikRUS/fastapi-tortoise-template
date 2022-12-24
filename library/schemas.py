@@ -42,14 +42,19 @@ class GenreResponse(CreateGenre):
         orm_mode = True
 
 
-class CreateBook(BaseModel):
+class BookResponse(BaseModel):
     title: str = Field("Название книги", min_length=1, max_length=200)
     author_id: int
-    genres_id: list[int]
     summary: str = Field("Описание книги")
+    updated_at: datetime
+    created_at: datetime
 
 
-class BookResponse(BaseModel):
+class CreateBook(BookResponse):
+    genres_id: list[int]
+
+
+class BookDetailResponse(BaseModel):
     id: int
     title: str
     summary: str
@@ -64,4 +69,4 @@ class BookResponse(BaseModel):
 
 class BooksResponse(BaseModel):
     count: int
-    found_books: list[BookResponse]
+    found_books: list[BookDetailResponse]
