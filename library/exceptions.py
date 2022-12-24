@@ -1,6 +1,5 @@
 from common.exceptions import BaseBadRequestError, BaseNotFoundError, BaseConflictError
 
-
 """
 Ошибки библиотеки
 """
