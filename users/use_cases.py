@@ -1,26 +1,10 @@
 from .schemas import UserRegister
 from .models import User, UserResponse, UserUpdate
-from .security.schemas import Token
-from .security import authenticate_user, sign_jwt, get_hasher
-from .exceptions import (
-    UserWrongPasswordError, UserAlreadyRegisteredError, UserEmailTakenError, UserPhoneTakenError, UserNotFoundError
-)
+from .exceptions import UserAlreadyRegisteredError, UserEmailTakenError, UserPhoneTakenError, UserNotFoundError
 from .maintenance import su_registration
+from .security import hasher
 
 from config import super_users_config
-
-
-class UserAuth:
-    """
-    Кейс получения токена
-    """
-
-    async def __call__(self, username: str, password: str) -> Token:
-        user: User = await authenticate_user(username=username, password=password)
-        if user:
-            access_token: Token = sign_jwt(username=username)
-            return access_token
-        raise UserWrongPasswordError
 
 
 class UserRegistration:
@@ -29,7 +13,7 @@ class UserRegistration:
     """
 
     def __init__(self) -> None:
-        self.hasher = get_hasher()
+        self.hasher = hasher
 
     @su_registration(super_users_config.get("superusers"))
     async def __call__(self, user: UserRegister) -> UserResponse:
