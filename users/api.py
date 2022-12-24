@@ -3,9 +3,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from .models import User, UserResponse, UserUpdate
 from .schemas import UserRegister
-from .security import get_current_user
-from .security.schemas import Token
-from .use_cases import UserAuth, UserRegistration, GetUser, UpdateUserProfile
+from .security import UserAuth, UserLogin
+from .security.schemas import Token, UserType
+from .use_cases import UserRegistration, GetUser, UpdateUserProfile
 
 from tortoise.contrib.fastapi import HTTPNotFoundError
 
@@ -26,12 +26,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     """
     Авторизация пользователя
     """
-    access_token = UserAuth()
-    return await access_token(form_data.username, form_data.password)
+    access_token = UserLogin(form_data.username, form_data.password)
+    return await access_token()
 
 
 @users_router.get("/me", status_code=200, response_model=UserResponse)
-async def get_me(current_user: User = Depends(get_current_user)):
+async def get_me(current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Получить информацию о себе
     """
@@ -52,7 +52,7 @@ async def get_user(user_id: int):
 @users_router.put(
     "/update_me", response_model=UserUpdate, responses={404: {"model": HTTPNotFoundError}}
 )
-async def update_me(user: UserUpdate, current_user: User = Depends(get_current_user)):
+async def update_me(user: UserUpdate, current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Изменение информации пользователя
     """
