@@ -9,7 +9,7 @@ from .use_cases import GetUsersForAdmin
 admins_router = APIRouter(prefix="/admins", tags=["admins"])
 
 
-@admins_router.get("/users", response_model=list[UserForAdminResponse] | UserForAdminResponse)
+@admins_router.get("/users", response_model=list[UserForAdminResponse])
 async def get_users_for_admin(user_id: int = Query(None), current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Получение пользователей для админа
