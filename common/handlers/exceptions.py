@@ -11,7 +11,7 @@ def common_exception_handler(request: Request, exception: Exception) -> JSONResp
     status_code = getattr(exception, "status", status.HTTP_400_BAD_REQUEST)
     content = {
         "message": getattr(exception, "message", "Ошибка."),
-        "reason": getattr(exception, "reason", None),
+        "reason": getattr(exception, "reason", "error"),
         "ok": getattr(exception, "ok", False)
     }
 
