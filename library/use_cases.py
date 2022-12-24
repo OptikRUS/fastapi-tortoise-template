@@ -22,7 +22,7 @@ class GenreCreationCase:
 
 class GetGenresCase:
     """
-    Кейс получения всех жанров
+    Кейс получения жанра(ов)
     """
 
     async def __call__(self, genre_id: Optional[int]):
@@ -55,7 +55,7 @@ class AuthorCreationCase:
 
 class GetAuthorCase:
     """
-    Кейс получения информации об авторе
+    Кейс получения автора(ов)
     """
 
     async def __call__(self, author_id: Optional[int]):
@@ -105,31 +105,42 @@ class BookCreationCase:
 
 class GetBooksCase:
     """
-    Кейс получения всех книг
+    Кейс получения книг(и)
     """
 
-    async def __call__(self):
-        found_books = list()
+    async def __call__(self, book_id: Optional[int]):
 
-        all_books = await Book.all().select_related('author')
-        if all_books:
-            for book in all_books:
-                found_books.append(
-                    dict(
-                        book,
-                        author=book.author,
-                        genres=await book.genres
+        if not book_id:
+            found_books = list()
+            all_books = await Book.all().select_related('author')
+            if all_books:
+                for book in all_books:
+                    found_books.append(
+                        dict(
+                            book,
+                            author=book.author,
+                            genres=await book.genres
+                        )
                     )
+                books_response = dict(
+                    count=len(found_books),
+                    found_books=found_books
                 )
-            books_response = dict(
-                count=len(found_books),
-                found_books=found_books
+                return books_response
+            raise exc.BooksNotFoundError
+
+        book = await Book.get(id=book_id)
+        if book:
+            book_response = dict(
+                book,
+                author=await book.author,
+                genres=await book.genres
             )
-            return books_response
-        raise exc.BooksNotFoundError
+            return book_response
+        raise exc.BookNotFoundError
 
 
-class GetBookCase:
+class SearchBookCase:
     """
     Кейс поиска книг по названию или описанию
     """

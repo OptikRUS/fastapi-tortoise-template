@@ -58,21 +58,21 @@ async def register_book_for_admin(book: schemas.CreateBook, current_admin: User 
     return await book_creation(book)
 
 
-@library_router.get("/all_books", status_code=200, response_model=schemas.BooksResponse)
-async def get_all_books(current_user: User = Depends(UserAuth(UserType.ANY))):
+@library_router.get("/books", status_code=200, response_model=schemas.BooksResponse | schemas.BookResponse)
+async def get_books(book_id: int = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
-    Список всех книг
+    Получение книги по id или всех книг
     """
 
-    all_books = library_cases.GetBooksCase()
-    return await all_books()
+    books = library_cases.GetBooksCase()
+    return await books(book_id)
 
 
 @library_router.get("/search_book", status_code=200, response_model=schemas.BooksResponse)
-async def get_book_info(search_book: str = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
+async def get_search_book(search_book: str = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Поиск книг по названию или описанию
     """
 
-    get_book = library_cases.GetBookCase()
+    get_book = library_cases.SearchBookCase()
     return await get_book(search_book)
