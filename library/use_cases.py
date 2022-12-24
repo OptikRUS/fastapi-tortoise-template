@@ -1,3 +1,4 @@
+from typing import Optional
 from tortoise.expressions import Q
 
 from .schemas import CreateGenre, GenreResponse, CreateAuthor, AuthorResponse, CreateBook, BookResponse
@@ -49,16 +50,19 @@ class AuthorCreationCase:
         return AuthorResponse.from_orm(new_author)
 
 
-class GetAuthorsCase:
+class GetAuthorCase:
     """
-    Кейс получения всех авторов
+    Кейс получения информации об авторе
     """
 
-    async def __call__(self):
-        all_authors = await Author.all()
-        if all_authors:
-            return all_authors
-        raise exc.AuthorsNotFoundError
+    async def __call__(self, author_id: Optional[int]):
+        if not author_id:
+            return await Author.all()
+
+        author = await Author.filter(id=author_id)
+        if author:
+            return author
+        raise exc.AuthorNotFoundError
 
 
 class BookCreationCase:

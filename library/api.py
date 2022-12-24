@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 
-from users.security import get_current_admin, get_current_user
+from users.security import UserAuth, UserType
 from users.models import User
 from library import schemas, use_cases as library_cases
 
@@ -9,7 +9,7 @@ library_router = APIRouter(prefix="/library", tags=["library"])
 
 
 @library_router.post("/create_genre", status_code=201, response_model=schemas.GenreResponse)
-async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: User = Depends(get_current_admin)):
+async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Добавление жанра книги админом
     """
@@ -19,7 +19,7 @@ async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: User 
 
 
 @library_router.get("/all_genres", status_code=200, response_model=list[schemas.GenreResponse])
-async def get_all_genres(current_user: User = Depends(get_current_user)):
+async def get_all_genres(current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Список всех жанров
     """
@@ -29,7 +29,7 @@ async def get_all_genres(current_user: User = Depends(get_current_user)):
 
 
 @library_router.post("/create_author", status_code=201, response_model=schemas.AuthorResponse)
-async def create_author_by_admin(author: schemas.CreateAuthor, current_admin: User = Depends(get_current_admin)):
+async def create_author_by_admin(author: schemas.CreateAuthor, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Добавление автора книги админом
     """
@@ -38,18 +38,18 @@ async def create_author_by_admin(author: schemas.CreateAuthor, current_admin: Us
     return await author_creation(author)
 
 
-@library_router.get("/all_authors", status_code=200, response_model=list[schemas.AuthorResponse])
-async def get_all_authors(current_user: User = Depends(get_current_user)):
+@library_router.get("/authors", status_code=200, response_model=list[schemas.AuthorResponse])
+async def get_authors(author_id: int = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
-    Список всех авторов
+    Поиск автора
     """
 
-    all_authors = library_cases.GetAuthorsCase()
-    return await all_authors()
+    author = library_cases.GetAuthorCase()
+    return await author(author_id)
 
 
 @library_router.post("/create_book", status_code=201, response_model=schemas.BookResponse)
-async def register_book_for_admin(book: schemas.CreateBook, current_admin: User = Depends(get_current_admin)):
+async def register_book_for_admin(book: schemas.CreateBook, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Регистрации книги админом
     """
@@ -59,7 +59,7 @@ async def register_book_for_admin(book: schemas.CreateBook, current_admin: User 
 
 
 @library_router.get("/all_books", status_code=200, response_model=schemas.BooksResponse)
-async def get_all_books(current_user: User = Depends(get_current_user)):
+async def get_all_books(current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Список всех книг
     """
@@ -69,7 +69,7 @@ async def get_all_books(current_user: User = Depends(get_current_user)):
 
 
 @library_router.get("/search_book", status_code=200, response_model=schemas.BooksResponse)
-async def get_book_info(search_book: str = Query(None), current_user: User = Depends(get_current_user)):
+async def get_book_info(search_book: str = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
     Поиск книг по названию или описанию
     """
