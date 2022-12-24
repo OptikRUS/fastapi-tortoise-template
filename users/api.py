@@ -3,8 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from .models import User, UserResponse, UserUpdate
 from .schemas import UserRegister
-from .security import UserAuth, UserLogin
-from .security.schemas import Token, UserType
+from common.security import UserAuth, UserLogin, Token, UserType
 from .use_cases import UserRegistration, GetUser, UpdateUserProfile
 
 from tortoise.contrib.fastapi import HTTPNotFoundError

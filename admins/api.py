@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 
 from users.models import User
-from users.security import UserAuth, UserType
+from common.security import UserAuth, UserType
 from .schemas import UserForAdminResponse
 from .use_cases import GetUsersForAdmin
 

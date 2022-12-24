@@ -7,5 +7,5 @@ class Token(BaseModel):
 
 
 class UserType(str, Enum):
-    ANY = "any"
+    ANY = "any_user"
     ADMIN = "admin"

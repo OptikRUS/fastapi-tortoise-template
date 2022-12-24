@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 
-from users.security import UserAuth, UserType
+from common.security import UserAuth, UserType
 from users.models import User
 from library import schemas, use_cases as library_cases
 
