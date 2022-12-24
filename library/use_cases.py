@@ -25,11 +25,14 @@ class GetGenresCase:
     Кейс получения всех жанров
     """
 
-    async def __call__(self):
-        all_genres = await Genre.all()
-        if all_genres:
-            return all_genres
-        raise exc.GenresNotFoundError
+    async def __call__(self, genre_id: Optional[int]):
+        if not genre_id:
+            return await Genre.all()
+
+        genre = await Genre.filter(id=genre_id)
+        if genre:
+            return genre
+        raise exc.GenreNotFoundError
 
 
 class AuthorCreationCase:

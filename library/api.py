@@ -18,14 +18,14 @@ async def create_genre_by_admin(genre: schemas.CreateGenre, current_admin: User 
     return await genre_creation(genre)
 
 
-@library_router.get("/all_genres", status_code=200, response_model=list[schemas.GenreResponse])
-async def get_all_genres(current_user: User = Depends(UserAuth(UserType.ANY))):
+@library_router.get("/genres/", status_code=200, response_model=list[schemas.GenreResponse])
+async def get_genres(genre_id: int = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
-    Список всех жанров
+    Получение жанра по id или всех жанров
     """
 
-    all_users = library_cases.GetGenresCase()
-    return await all_users()
+    genres = library_cases.GetGenresCase()
+    return await genres(genre_id)
 
 
 @library_router.post("/create_author", status_code=201, response_model=schemas.AuthorResponse)
@@ -41,7 +41,7 @@ async def create_author_by_admin(author: schemas.CreateAuthor, current_admin: Us
 @library_router.get("/authors", status_code=200, response_model=list[schemas.AuthorResponse])
 async def get_authors(author_id: int = Query(None), current_user: User = Depends(UserAuth(UserType.ANY))):
     """
-    Поиск автора
+    Получение автора по id или всех авторов
     """
 
     author = library_cases.GetAuthorCase()
