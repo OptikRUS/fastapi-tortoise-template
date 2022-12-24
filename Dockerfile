@@ -3,6 +3,8 @@ FROM python:3.11.0rc2
 
 # хост базы данных для докера
 ENV DATABASE_HOST=database
+# хост сайта
+ENV SITE_HOST=0.0.0.0
 
 # установка рабочей директории
 WORKDIR /
