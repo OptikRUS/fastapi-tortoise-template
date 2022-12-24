@@ -66,6 +66,13 @@ class DataBaseModels(BaseSettings):
 class DataBaseSettings(BaseSettings):
     connections: dict = Field(DataBaseConnections())
     apps: dict = Field(dict(models=DataBaseModels()))
+    generate_schemas: bool = Field(True, env="TORTOISE_GENERATE_SCHEMAS")
+    add_exception_handlers: bool = Field(True, env="DATABASE_EXCEPTION_HANDLERS")
+
+
+class TortoiseSettings(BaseSettings):
+    generate_schemas: bool = Field(True, env="TORTOISE_GENERATE_SCHEMAS")
+    add_exception_handlers: bool = Field(True, env="DATABASE_EXCEPTION_HANDLERS")
 
 
 class AuthSettings(BaseSettings):

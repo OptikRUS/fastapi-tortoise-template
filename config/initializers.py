@@ -24,9 +24,9 @@ def init_routers(application: FastAPI) -> None:
 
 def init_database(application: FastAPI) -> None:
     from tortoise.contrib.fastapi import register_tortoise
-    from config import database_config
+    from config import database_config, tortoise_config
 
-    register_tortoise(application, config=database_config)
+    register_tortoise(application, config=database_config, **tortoise_config)
 
 
 def init_exception_handlers(application: FastAPI) -> None:
