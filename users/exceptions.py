@@ -1,57 +1,56 @@
-from fastapi import status
-from .entities import BaseUserHTTPException
+from common.exceptions import BaseNotAuthError, BaseForbiddenError, BaseNotFoundError, BaseConflictError
 
 """
-Пример через Base Exception
+Ошибки пользователя
 """
 
 
-class UserTokenTimeOutError(BaseUserHTTPException):
+class UserTokenTimeOutError(BaseNotAuthError):
     message: str = "Время кода истекло."
-    status: int = status.HTTP_401_UNAUTHORIZED
     reason: str = "user_token_timeout"
 
 
-class UserWrongPasswordError(BaseUserHTTPException):
+class UserWrongPasswordError(BaseNotAuthError):
     message: str = "Введён неверный пароль."
-    status: int = status.HTTP_401_UNAUTHORIZED
     reason: str = "user_wrong_password"
 
 
-class UserAlreadyRegisteredError(BaseUserHTTPException):
-    message: str = "Пользователь с таким ником уже зарегистрирован."
-    status: int = status.HTTP_409_CONFLICT
-    reason: str = "user_already_exist"
-
-
-class UserEmailTakenError(UserAlreadyRegisteredError):
-    message: str = "Введенный email занят."
-    reason: str = "user_mail_already_exist"
-
-
-class UserPhoneTakenError(UserAlreadyRegisteredError):
-    message: str = "Введённый номер телефона занят."
-    reason: str = "user_phone_already_exist"
-
-
-class UserNotAuthError(UserWrongPasswordError):
-    message: str = "Пользователь не авторизован."
-    reason: str = "user_not_auth"
-
-
-class UserNotFoundError(BaseUserHTTPException):
-    message: str = "Пользователь не найден."
-    status: int = status.HTTP_404_NOT_FOUND
-    reason: str = "user_not_found"
-
-
-class UserNotActiveErrorHTTP(BaseUserHTTPException):
+class UserNotActiveError(BaseForbiddenError):
     message: str = "Пользователь неактивен."
-    status: int = status.HTTP_403_FORBIDDEN
     reason: str = 'user_not_active'
     headers: dict = {"WWW-Authenticate": "Bearer"}
 
 
-class UserForbiddenErrorHTTP(UserNotActiveErrorHTTP):
+class UserForbiddenError(BaseForbiddenError):
     message: str = "У пользователя нет прав."
     reason: str = 'user_forbidden_error'
+
+
+class UserNotFoundError(BaseNotFoundError):
+    message: str = "Пользователь не найден."
+    reason: str = "user_not_found"
+
+
+class UsersNotFoundError(BaseNotFoundError):
+    message: str = "Пользователи не найдены."
+    reason: str = "users_not_found"
+
+
+class UserAlreadyRegisteredError(BaseConflictError):
+    message: str = "Пользователь с таким ником уже зарегистрирован."
+    reason: str = "user_already_exist"
+
+
+class UserEmailTakenError(BaseConflictError):
+    message: str = "Введенный email занят."
+    reason: str = "user_mail_already_exist"
+
+
+class UserPhoneTakenError(BaseConflictError):
+    message: str = "Введённый номер телефона занят."
+    reason: str = "user_phone_already_exist"
+
+
+class UserNotAuthError(BaseConflictError):
+    message: str = "Пользователь не авторизован."
+    reason: str = "user_not_auth"
