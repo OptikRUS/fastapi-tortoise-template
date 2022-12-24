@@ -1,7 +1,7 @@
 from typing import Optional
 
 from users.models import User
-from users.exceptions import UsersNotFoundError
+from users.exceptions import UserNotFoundError
 
 
 class GetUsersForAdmin:
@@ -13,7 +13,7 @@ class GetUsersForAdmin:
         if user_id:
             user = await User.filter(id=user_id)
             if not user:
-                raise UsersNotFoundError
+                raise UserNotFoundError
             return user
         users = await User.all()
         return users
