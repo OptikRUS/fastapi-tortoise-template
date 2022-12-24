@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
+from tortoise.contrib.fastapi import HTTPNotFoundError
 
+from common.security import UserAuth, UserLogin, Token, UserType
 from .models import User, UserResponse, UserUpdate
 from .schemas import UserRegister
-from common.security import UserAuth, UserLogin, Token, UserType
 from .use_cases import UserRegistration, GetUser, UpdateUserProfile
-
-from tortoise.contrib.fastapi import HTTPNotFoundError
 
 users_router = APIRouter(prefix="/users", tags=["users"])
 
