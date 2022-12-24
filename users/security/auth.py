@@ -90,10 +90,10 @@ class UserAuth:
             raise exc.UserNotAuthError
 
         if not user.is_active:
-            raise exc.UserNotActiveErrorHTTP
+            raise exc.UserNotActiveError
 
         if self.user_type == UserType.ADMIN and not user.is_superuser:
-            raise exc.UserForbiddenErrorHTTP
+            raise exc.UserForbiddenError
         return user
 
     def decode_jwt(self, token: str) -> dict:
