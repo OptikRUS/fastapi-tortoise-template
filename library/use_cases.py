@@ -60,7 +60,10 @@ class GetAuthorCase:
 
     async def __call__(self, author_id: Optional[int]):
         if not author_id:
-            return await Author.all()
+            authors = await Author.all()
+            if not authors:
+                raise exc.AuthorsNotFoundError
+            return authors
 
         author = await Author.filter(id=author_id)
         if author:
