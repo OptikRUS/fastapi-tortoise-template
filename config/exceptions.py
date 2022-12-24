@@ -4,7 +4,9 @@ from importlib import import_module
 def get_exceptions() -> list[Exception]:
 
     modules: list[import_module] = [
+        # добавляем ошибки из модулей приложений
         import_module('users.exceptions'),
+        import_module('library.exceptions'),
     ]
 
     exceptions = list[Exception]

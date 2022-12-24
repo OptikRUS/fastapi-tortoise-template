@@ -163,4 +163,4 @@ class SearchBookCase:
                 found_books=found_books
             )
             return books_response
-        raise exc.BookNotFoundError
+        raise exc.BooksNotFoundError

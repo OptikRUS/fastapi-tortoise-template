@@ -1,24 +1,24 @@
 from fastapi import status
-from .entities import BaseUserException, BaseUserHTTPException
+from .entities import BaseUserHTTPException
 
 """
 Пример через Base Exception
 """
 
 
-class UserTokenTimeOutError(BaseUserException):
+class UserTokenTimeOutError(BaseUserHTTPException):
     message: str = "Время кода истекло."
     status: int = status.HTTP_401_UNAUTHORIZED
     reason: str = "user_token_timeout"
 
 
-class UserWrongPasswordError(BaseUserException):
+class UserWrongPasswordError(BaseUserHTTPException):
     message: str = "Введён неверный пароль."
     status: int = status.HTTP_401_UNAUTHORIZED
     reason: str = "user_wrong_password"
 
 
-class UserAlreadyRegisteredError(BaseUserException):
+class UserAlreadyRegisteredError(BaseUserHTTPException):
     message: str = "Пользователь с таким ником уже зарегистрирован."
     status: int = status.HTTP_409_CONFLICT
     reason: str = "user_already_exist"
@@ -39,7 +39,7 @@ class UserNotAuthError(UserWrongPasswordError):
     reason: str = "user_not_auth"
 
 
-class UserNotFoundError(BaseUserException):
+class UserNotFoundError(BaseUserHTTPException):
     message: str = "Пользователь не найден."
     status: int = status.HTTP_404_NOT_FOUND
     reason: str = "user_not_found"
