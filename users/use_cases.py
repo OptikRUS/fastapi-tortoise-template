@@ -1,8 +1,8 @@
+from common.security import hasher
 from .schemas import UserRegister
 from .models import User, UserResponse, UserUpdate
 from .exceptions import UserAlreadyRegisteredError, UserEmailTakenError, UserPhoneTakenError, UserNotFoundError
 from .maintenance import su_registration
-from common.security import hasher
 
 from config import super_users_config
 
