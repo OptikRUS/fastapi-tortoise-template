@@ -31,7 +31,6 @@ def init_database(application: FastAPI) -> None:
 
 def init_exception_handlers(application: FastAPI) -> None:
     from common.handlers import common_exception_handler
-    from config.exceptions import get_exceptions
+    from common.exceptions.base import BaseHTTPException
 
-    for exception in get_exceptions():
-        application.add_exception_handler(exception, common_exception_handler)
+    application.add_exception_handler(BaseHTTPException, common_exception_handler)
