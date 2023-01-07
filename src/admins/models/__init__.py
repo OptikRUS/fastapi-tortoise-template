@@ -1,1 +1,1 @@
-from .user import UserApprovedResponse
+from .user import UserApprovedResponse, UserBlockedResponse

@@ -5,7 +5,7 @@ from src.users.repos import User
 from src.users.models import UserResponse
 from src.users.exceptions import BaseUserExceptionModel
 from ..use_cases import GetUsersForAdmin, ApproveUserByAdmin, BlockUserByAdmin, UnblockUserByAdmin
-from ..models import UserApprovedResponse
+from ..models import UserApprovedResponse, UserBlockedResponse
 from ..exceptions import BaseAdminExceptionModel
 
 router = APIRouter(prefix="/admins", tags=["admins"])
@@ -47,7 +47,7 @@ async def approve_user(user_id: int, current_admin: User = Depends(UserAuth(User
 
 @router.patch(
     "/block/{user_id}",
-    response_model=UserApprovedResponse,
+    response_model=UserBlockedResponse,
     responses={
         400: {"model": BaseAdminExceptionModel},
         404: {"model": BaseUserExceptionModel},
@@ -65,7 +65,7 @@ async def block_user(user_id: int, current_admin: User = Depends(UserAuth(UserTy
 
 @router.patch(
     "/unblock/{user_id}",
-    response_model=UserApprovedResponse,
+    response_model=UserBlockedResponse,
     responses={
         400: {"model": BaseAdminExceptionModel},
         404: {"model": BaseUserExceptionModel},
