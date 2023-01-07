@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 
 from src.users import exceptions as exc
 from src.users.repos import User
-from .schemas import Token, UserType
+from .models import Token, UserType
 
 from config import auth_config
 
