@@ -3,17 +3,17 @@ from common.exceptions.models import BaseExceptionModel
 
 class BaseAuthorExceptionModel(BaseExceptionModel):
     """
-    Базовый репозиторий автора
+    Базовая модель ошибки автора
     """
 
 
 class BaseBookExceptionModel(BaseExceptionModel):
     """
-    Базовый репозиторий книги
+    Базовая модель ошибки книги
     """
 
 
 class BaseGenreExceptionModel(BaseExceptionModel):
     """
-    Базовый репозиторий жанра
+    Базовая модель ошибки жанра
     """
