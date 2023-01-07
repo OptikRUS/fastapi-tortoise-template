@@ -57,8 +57,8 @@ class DataBaseModels(BaseSettings):
     models: list[str] = Field(
         [
             "aerich.models",
-            "users.models",
-            "library.models",
+            "src.users.repos",
+            "src.library.repos",
         ]
     )
 

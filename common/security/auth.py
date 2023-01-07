@@ -5,8 +5,8 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
-from users import exceptions as exc
-from users.models import User
+from src.users import exceptions as exc
+from src.users.repos import User
 from .schemas import Token, UserType
 
 from config import auth_config
