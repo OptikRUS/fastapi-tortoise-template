@@ -4,8 +4,9 @@ from common.security import UserAuth, UserType
 from src.users.repos import User
 from src.users.models import UserResponse
 from src.users.exceptions import BaseUserExceptionModel
-from ..use_cases import GetUsersForAdmin, ApproveUserByAdmin
+from ..use_cases import GetUsersForAdmin, ApproveUserByAdmin, BlockUserByAdmin, UnblockUserByAdmin
 from ..models import UserApprovedResponse
+from ..exceptions import BaseAdminExceptionModel
 
 router = APIRouter(prefix="/admins", tags=["admins"])
 
@@ -30,14 +31,51 @@ async def get_users_for_admin(user_id: int = Query(None), auth: User = Depends(U
     "/approve/{user_id}",
     response_model=UserApprovedResponse,
     responses={
+        400: {"model": BaseAdminExceptionModel},
         404: {"model": BaseUserExceptionModel},
         409: {"model": BaseUserExceptionModel}
     }
 )
-async def approve_user(user_id: int = Query(None), auth: User = Depends(UserAuth(UserType.ADMIN))):
+async def approve_user(user_id: int, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
     """
     Подтверждение пользователя админом
     """
 
-    user: ApproveUserByAdmin = ApproveUserByAdmin()
-    return await user(user_id=user_id)
+    approved_user: ApproveUserByAdmin = ApproveUserByAdmin(user_id=user_id, current_user=current_admin)
+    return await approved_user()
+
+
+@router.patch(
+    "/block/{user_id}",
+    response_model=UserApprovedResponse,
+    responses={
+        400: {"model": BaseAdminExceptionModel},
+        404: {"model": BaseUserExceptionModel},
+        409: {"model": BaseUserExceptionModel}
+    }
+)
+async def block_user(user_id: int, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
+    """
+    Блокировка пользователя админом
+    """
+
+    blocked_user: BlockUserByAdmin = BlockUserByAdmin(user_id=user_id, current_user=current_admin)
+    return await blocked_user()
+
+
+@router.patch(
+    "/unblock/{user_id}",
+    response_model=UserApprovedResponse,
+    responses={
+        400: {"model": BaseAdminExceptionModel},
+        404: {"model": BaseUserExceptionModel},
+        409: {"model": BaseUserExceptionModel}
+    }
+)
+async def unblock_user(user_id: int, current_admin: User = Depends(UserAuth(UserType.ADMIN))):
+    """
+    Разблокировка пользователя админом
+    """
+
+    unblocked_user: UnblockUserByAdmin = UnblockUserByAdmin(user_id=user_id, current_user=current_admin)
+    return await unblocked_user()

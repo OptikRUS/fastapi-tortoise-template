@@ -1,11 +1,9 @@
-from datetime import datetime
-
-from pydantic import BaseModel, Field
+from .base import UserUpdateResponse
 
 
-class UserApprovedResponse(BaseModel):
-    id: int
-    username: str = Field("username")
+class UserApprovedResponse(UserUpdateResponse):
     is_approved: bool
-    updated_at: datetime
-    created_at: datetime
+
+
+class UserBlockedResponse(UserUpdateResponse):
+    is_active: bool

@@ -59,3 +59,13 @@ class UserNotAuthError(BaseConflictError):
 class UserAlreadyApprovedError(BaseConflictError):
     message: str = "Пользователь уже подтверждён."
     reason: str = "user_already_approved"
+
+
+class UserAlreadyBlockedError(BaseConflictError):
+    message: str = "Пользователь уже заблокирован."
+    reason: str = "user_already_blocked"
+
+
+class UserAlreadyUnblockedError(BaseConflictError):
+    message: str = "Пользователь уже разблокирован."
+    reason: str = "user_already_unblocked"

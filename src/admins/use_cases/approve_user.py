@@ -1,22 +1,15 @@
-from src.users.repos import UserRepo, User
-from src.users.exceptions import UserNotFoundError, UserAlreadyApprovedError
+from src.users.repos import User
+from src.users.exceptions import UserAlreadyApprovedError
+from .base_patch import BasePatch
 
 
-class ApproveUserByAdmin:
+class ApproveUserByAdmin(BasePatch):
     """
     Кейс подтверждения пользователя админом
     """
 
-    def __init__(self) -> None:
-        self.user_repo: UserRepo = UserRepo()
-
-    async def __call__(self, user_id: int):
-        filters: dict = dict(id=user_id)
-
-        user: User = await self.user_repo.retrieve(filters=filters)
-        if not user:
-            raise UserNotFoundError
-
+    async def __call__(self):
+        user = await self.get_user()
         if user.is_approved:
             raise UserAlreadyApprovedError
 
