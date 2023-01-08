@@ -1,5 +1,5 @@
 from ..repos import BookRepo, Book
-from ..exceptions import BooksNotFoundError
+from ..exceptions import BookNotFoundError
 
 
 class GetBooksCase:
@@ -19,4 +19,4 @@ class GetBooksCase:
         books: list[Book] = await self.book_repo.list(filters=filters)
         if books:
             return books
-        raise BooksNotFoundError
+        raise BookNotFoundError

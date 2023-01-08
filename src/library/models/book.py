@@ -21,6 +21,7 @@ class CreateBookRequest(BaseBook):
     Модель запроса создания книги
     """
 
+    author_id: int
     genres_id: list[int]
 
 
