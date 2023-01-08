@@ -1,5 +1,5 @@
 from ..repos import AuthorRepo, Author
-from ..exceptions import AuthorsNotFoundError
+from ..exceptions import AuthorNotFoundError
 
 
 class GetAuthorCase:
@@ -19,4 +19,4 @@ class GetAuthorCase:
         authors: list[Author] = await self.author_repo.list(filters=filters)
         if authors:
             return authors
-        raise AuthorsNotFoundError
+        raise AuthorNotFoundError
