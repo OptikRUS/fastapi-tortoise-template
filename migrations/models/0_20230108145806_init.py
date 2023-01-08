@@ -20,9 +20,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     "password" VARCHAR(128),
     "is_active" BOOL NOT NULL  DEFAULT True,
     "is_approved" BOOL NOT NULL  DEFAULT False,
-    "is_superuser" BOOL NOT NULL  DEFAULT False,
-    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP
+    "is_superuser" BOOL NOT NULL  DEFAULT False
 );
 COMMENT ON TABLE "users" IS 'Модель пользователя';
 CREATE TABLE IF NOT EXISTS "authors" (
@@ -39,8 +37,6 @@ CREATE TABLE IF NOT EXISTS "books" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "title" VARCHAR(200) NOT NULL UNIQUE,
     "summary" TEXT NOT NULL,
-    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
     "author_id" INT REFERENCES "authors" ("id") ON DELETE SET NULL
 );
 COMMENT ON TABLE "books" IS 'Модель книги';
